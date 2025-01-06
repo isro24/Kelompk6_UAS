@@ -1,0 +1,55 @@
+<div class="menu-page">
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Menu Makanan</h2>
+        <div class="row">
+            <% makanan.forEach(product => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow product-card">
+                        <% if (product.image && product.image.trim()) { %>
+                            <img src="<%= product.image %>" class="card-img-top img-fluid" alt="Product Image" style="height: 200px; object-fit: cover;">
+                        <% } else { %>
+                            <img src="/path/to/default-image.jpg" class="card-img-top img-fluid" alt="Default Image" style="height: 200px; object-fit: cover;">
+                        <% } %>
+                        <div class="card-body text-center">
+                            <h5 class="card-title text-dark"><%= product.nama_product %></h5>
+                            <p class="card-text mb-1 text-danger font-weight-bold">Rp<%= product.harga.toLocaleString() %></p>
+                            <!-- Tombol untuk menambahkan produk -->
+                            <div class="quantity-controller mt-3">
+                                <button class="btn btn-outline-danger btn-sm d-none kurang-btn" data-id="<%= product.id %>">-</button>
+                                <span class="mx-2 jumlah-produk d-none" data-id="<%= product.id %>">1</span>
+                                <button class="btn btn-outline-success btn-sm tambah-btn" data-id="<%= product.id %>">Tambah</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+
+        <div class="divider mb-1 mt-4 border-bottom border-1 border-gray-300"></div>
+
+        <h2 class="text-center mb-4 mt-5">Menu Minuman</h2>
+        <div class="row">
+            <% minuman.forEach(product => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow product-card">
+                        <% if (product.image && product.image.trim()) { %>
+                            <img src="<%= product.image %>" class="card-img-top img-fluid" alt="Product Image" style="height: 200px; object-fit: cover;">
+                        <% } else { %>
+                            <img src="/path/to/default-image.jpg" class="card-img-top img-fluid" alt="Default Image" style="height: 200px; object-fit: cover;">
+                        <% } %>
+                        <div class="card-body text-center">
+                            <h5 class="card-title text-dark"><%= product.nama_product %></h5>
+                            <p class="card-text mb-1 text-danger font-weight-bold">Rp<%= product.harga.toLocaleString() %></p>
+                            <!-- Tombol untuk menambahkan produk -->
+                            <div class="quantity-controller mt-3">
+                                <button class="btn btn-outline-danger btn-sm d-none kurang-btn" data-id="<%= product.id %>">-</button>
+                                <span class="mx-2 jumlah-produk d-none" data-id="<%= product.id %>">1</span>
+                                <button class="btn btn-outline-success btn-sm tambah-btn" data-id="<%= product.id %>">Tambah</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,100 @@
+<style>
+.admin-side .bg-light {
+    width: 250px;
+    padding-top: 20px;
+    padding-left: 10px;
+}
+
+@media (max-width: 768px) {
+    .admin-side .bg-light {
+        width: 60px; 
+    }
+
+    .admin-side .nav-link {
+        text-align: center; 
+    }
+
+    .admin-side .nav-link span {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .admin-side .bg-light {
+        padding-left: 5px;
+    }
+}
+
+</style>
+<div class="admin-side">
+    <div class="d-flex">
+        <nav class="bg-light d-flex flex-column" style="position: fixed; height: 100vh; padding-top: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/admin/dashboard">
+                        <i class="fas fa-fw fa-dashboard"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <hr class="sidebar-divider">
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/admin/product">
+                        <i class="fas fa-fw fa-box"></i>
+                        <span>Produk</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/admin/users">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span>Users</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/admin/pesanan">
+                        <i class="fas fa-fw fa-store"></i>
+                        <span>Pesanan Offline</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/admin/pesananOnline">
+                        <i class="fas fa-fw fa-shopping-cart"></i>
+                        <span>Pesanan Online</span>
+                    </a>
+                </li>
+
+                <hr class="sidebar-divider">
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span>Akses Halaman User</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+        <script>
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+      
+            navLinks.forEach(link => {
+                if (link.href === window.location.href) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+      
+            function createOptions(selectId, maxOptions) {
+                const selectElement = document.getElementById(selectId);
+                for (let i = 0; i <= maxOptions; i++) {
+                    const option = document.createElement("option");
+                    option.value = i;
+                    option.text = i;
+                    selectElement.appendChild(option);
+                }
+            }
+        </script>      
+</div>

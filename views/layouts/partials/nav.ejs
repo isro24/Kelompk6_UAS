@@ -1,0 +1,231 @@
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="/images/Logo.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-top">
+      </a>
+        <h5>Kelompok 6</h5>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item ms-4">
+            <a class="nav-link" aria-current="page" href="/">
+                <i class="fas fa-fw fa-home"></i>
+                Home</a>
+          </li>
+          <li class="nav-item ms-4">
+            <a class="nav-link" href="/about">About</a>
+          </li>
+          <li class="nav-item ms-4">
+            <a class="nav-link" href="/contact">Contact</a>
+          </li>
+          <li class="nav-item ms-4">
+            <a class="nav-link" href="/menu">Menu</a>
+          </li>
+          
+          <button class="btn btn-danger ml-3" data-toggle="modal" data-target="#bookingModal">Pesan Sekarang</button>
+        </ul>
+        <form class="d-flex" role="search" action="<%= isLoggedIn ? '/logout' : '/login' %>" method="POST">
+            <% if (isLoggedIn) { %>
+                <button class="btn btn-outline-white d-flex align-items-center" type="submit" style="color: black;" onmouseover="this.style.color='#007BFF'" onmouseout="this.style.color='black'">
+                    Sign Out
+                    <i class="fas fa-sign-out-alt ms-2"></i>
+                </button>
+            <% } else { %>
+                <a href="/login" class="btn btn-outline-white d-flex align-items-center" style="color: black;" onmouseover="this.style.color='#007BFF'" onmouseout="this.style.color='black'">
+                    Sign In
+                    <i class="fas fa-sign-in-alt ms-2"></i>
+                </a>
+            <% } %>
+        </form>        
+             
+      </div>
+    </div>
+</nav>
+<!-- Modal -->
+<div class="modal" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bookingModalLabel">Pesan Sekarang</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="bookingForm" action="/pesanan" method="POST">
+                    <div class="form-group">
+                        <label for="name">Nama Lengkap</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Nama Lengkap">
+                    </div>
+                    <div class="form-group">
+                        <label for="people">Jumlah Orang</label>
+                        <input type="number" class="form-control" id="people" name="people" placeholder="... Orang">
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p style="font-weight: bold;">MENU MAKANAN</p>
+                            <div class="form-group">
+                                <label for="Nasgor">Nasi Goreng</label>
+                                <select id="Nasgor" name="Nasgor" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Mie">Mie Goreng</label>
+                                <select id="Mie" name="Mie" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Ayam">Nasi Ayam Goreng</label>
+                                <select id="Ayam" name="Ayam" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Kuah">Mie Kuah</label>
+                                <select id="Kuah" name="Kuah" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Magelang">Magelangan</label>
+                                <select id="Magelang" name="Magelang" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Burjo">Bubur Kacang Ijo</label>
+                                <select id="Burjo" name="Burjo" class="form-control"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <p style="font-weight: bold;">MENU MINUMAN</p>
+                            <div class="form-group">
+                                <label for="Teteh">Es Teh</label>
+                                <select id="Teteh" name="Teteh" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Ruk">Es Jeruk</label>
+                                <select id="Ruk" name="Ruk" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Lo">Es Milo</label>
+                                <select id="Lo" name="Lo" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="PI">Kopi</label>
+                                <select id="PI" name="PI" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="POP">Pop Ice</label>
+                                <select id="POP" name="POP" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="TEH">Teh Hangat</label>
+                                <select id="TEH" name="TEH" class="form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="meja">Nomor Meja</label>
+                        <input type="number" class="form-control" id="meja" name="meja" placeholder="Nomor Meja">
+                    </div>
+                    <div class="form-group">
+                        <label for="request">Special Request</label>
+                        <textarea class="form-control" id="request" name="request" rows="3" placeholder="Special Request"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger">SUBMIT PESANAN</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+  const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+  
+  navLinks.forEach(link => {
+      if (link.href === window.location.href) {
+          link.classList.add('active');
+      } else {
+          link.classList.remove('active');
+      }
+  });
+
+  function createOptions(selectId, maxOptions) {
+    const selectElement = document.getElementById(selectId);
+    for (let i = 0; i <= maxOptions; i++) {
+        const option = document.createElement("option");
+        option.value = i;
+        option.text = i;
+        selectElement.appendChild(option);
+    }
+}
+
+const foodAndDrinkItems = [
+    "Nasgor", "Mie", "Ayam", "Kuah", "Magelang", "Burjo",
+    "Teteh", "Ruk", "Lo", "PI", "POP", "TEH"
+];
+
+foodAndDrinkItems.forEach(item => createOptions(item, 20));
+
+document.querySelector("#bookingForm").addEventListener("submit", async function (event) {
+    event.preventDefault(); // Mencegah reload halaman
+    
+    // Mengambil nilai dari form
+    const data = {
+        nama_lengkap: document.getElementById("name").value.trim(),
+        jumlah_orang: parseInt(document.getElementById("people").value.trim()),
+        nasi_goreng: parseInt(document.getElementById("Nasgor").value),
+        mie_goreng: parseInt(document.getElementById("Mie").value),
+        nasi_ayam_goreng: parseInt(document.getElementById("Ayam").value),
+        mie_kuah: parseInt(document.getElementById("Kuah").value),
+        magelangan: parseInt(document.getElementById("Magelang").value),
+        bubur_kacang_ijo: parseInt(document.getElementById("Burjo").value),
+        es_teh: parseInt(document.getElementById("Teteh").value),
+        es_jeruk: parseInt(document.getElementById("Ruk").value),
+        es_milo: parseInt(document.getElementById("Lo").value),
+        kopi: parseInt(document.getElementById("PI").value),
+        pop_ice: parseInt(document.getElementById("POP").value),
+        teh_hangat: parseInt(document.getElementById("TEH").value),
+        nomor_meja: parseInt(document.getElementById("meja").value.trim()),
+        special_request: document.getElementById("request").value.trim(),
+    };
+
+    // Validasi data
+    if (!data.nama_lengkap || isNaN(data.jumlah_orang) || data.jumlah_orang <= 0 || isNaN(data.nomor_meja) || data.nomor_meja <= 0) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Nama lengkap, jumlah orang, dan nomor meja wajib diisi dengan benar!",
+        });
+        return;
+    }
+
+    try {
+        // Kirim data ke backend
+        const response = await fetch("/pesanan", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            throw new Error("Terjadi kesalahan pada server!");
+        }
+
+        Swal.fire({
+            icon: "success",
+            title: "Pemesanan Berhasil",
+            text: "Terima kasih, pesanan Anda telah berhasil dibuat.",
+        }).then(() => {
+            document.querySelector("#bookingForm").reset();
+        });
+    } catch (error) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: error.message,
+        });
+    }
+});    
+</script>
+  

@@ -1,0 +1,587 @@
+<div class="pesanan-page">
+    <div class="container mt-4">
+        <h1 class="mb-4">Pesanan Offline</h1>
+
+        <!-- Tombol Tambah Pesanan -->
+        <div class="d-flex justify-content-between mb-3">
+            <div class="input-group w-25">
+                <span class="input-group-text">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" id="searchPesanan" class="form-control" placeholder="Cari Pesanan...">
+            </div>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPesananModal">Tambah Pesanan</button>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Lengkap</th>
+                    <th>Jumlah Orang</th>
+                    <th>Pesanan</th>
+                    <th>Nomor Meja</th>
+                    <th>Special Request</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="pesanan-list">
+                <!-- Data akan dimuat secara dinamis -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal Tambah Pesanan -->
+    <div class="modal fade" id="addPesananModal" tabindex="-1" aria-labelledby="addPesananModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addPesananModalLabel">Tambah Pesanan Di tempat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bookingForm" action="/pesanan" method="POST">
+                        <div class="form-group">
+                            <label for="name">Nama Lengkap</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Nama Lengkap">
+                        </div>
+                        <div class="form-group">
+                            <label for="people">Jumlah Orang</label>
+                            <input type="number" class="form-control" id="people" name="people" placeholder="... Orang">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p style="font-weight: bold;">MENU MAKANAN</p>
+                                <div class="form-group">
+                                    <label for="Nasgor">Nasi Goreng</label>
+                                    <select id="Nasgor" name="Nasgor" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Mie">Mie Goreng</label>
+                                    <select id="Mie" name="Mie" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Ayam">Nasi Ayam Goreng</label>
+                                    <select id="Ayam" name="Ayam" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Kuah">Mie Kuah</label>
+                                    <select id="Kuah" name="Kuah" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Magelang">Magelangan</label>
+                                    <select id="Magelang" name="Magelang" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Burjo">Bubur Kacang Ijo</label>
+                                    <select id="Burjo" name="Burjo" class="form-control"></select>
+                                </div>
+                            </div>
+    
+                            <div class="col-md-6">
+                                <p style="font-weight: bold;">MENU MINUMAN</p>
+                                <div class="form-group">
+                                    <label for="Teteh">Es Teh</label>
+                                    <select id="Teteh" name="Teteh" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Ruk">Es Jeruk</label>
+                                    <select id="Ruk" name="Ruk" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Lo">Es Milo</label>
+                                    <select id="Lo" name="Lo" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="PI">Kopi</label>
+                                    <select id="PI" name="PI" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="POP">Pop Ice</label>
+                                    <select id="POP" name="POP" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="TEH">Teh Hangat</label>
+                                    <select id="TEH" name="TEH" class="form-control"></select>
+                                </div>
+                            </div>
+                        </div>                   
+                        <div class="form-group">
+                            <label for="meja">Nomor Meja</label>
+                            <input type="number" class="form-control" id="meja" name="meja" placeholder="Nomor Meja">
+                        </div>
+                        <div class="form-group">
+                            <label for="special_request">Special Request</label>
+                            <textarea class="form-control" id="special_request" name="special_request" rows="3" placeholder="Special Request"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success mt-3">Tambah Pesanan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal untuk Update Pesanan -->
+    <div class="modal fade" id="updatePesananModal" tabindex="-1" aria-labelledby="updatePesananModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updatePesananModalLabel">Update Pesanan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateBookingForm">
+                        <input type="hidden" id="updatePesananId">
+                        <div class="form-group">
+                            <label for="updateName">Nama Lengkap</label>
+                            <input type="text" class="form-control" id="updateName" name="name" placeholder="Nama Lengkap">
+                        </div>
+                        <div class="form-group">
+                            <label for="updatePeople">Jumlah Orang</label>
+                            <input type="number" class="form-control" id="updatePeople" name="people" placeholder="... Orang">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p style="font-weight: bold;">MENU MAKANAN</p>
+                                <!-- Menu Makanan -->
+                                <div class="form-group">
+                                    <label for="updateNasgor">Nasi Goreng</label>
+                                    <select id="updateNasgor" name="Nasgor" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="updateMie">Mie Goreng</label>
+                                    <select id="updateMie" name="Mie" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="updateAyam">Nasi Ayam Goreng</label>
+                                    <select id="updateAyam" name="Ayam" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="updateKuah">Mie Kuah</label>
+                                    <select id="updateKuah" name="Kuah" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="updateMagelang">Magelangan</label>
+                                    <select id="updateMagelang" name="Magelang" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="updateBurjo">Bubur Kacang Ijo</label>
+                                    <select id="updateBurjo" name="Burjo" class="form-control"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <p style="font-weight: bold;">MENU MINUMAN</p>
+                                <!-- Menu Minuman -->
+                                <div class="form-group">
+                                    <label for="updateTeteh">Es Teh</label>
+                                    <select id="updateTeteh" name="Teteh" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="updateRuk">Es Jeruk</label>
+                                    <select id="updateRuk" name="Ruk" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="updateLo">Es Milo</label>
+                                    <select id="updateLo" name="Lo" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="updatePI">Kopi</label>
+                                    <select id="updatePI" name="PI" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="updatePOP">Pop Ice</label>
+                                    <select id="updatePOP" name="POP" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="updateTEH">Teh Hangat</label>
+                                    <select id="updateTEH" name="TEH" class="form-control"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="meja">Nomor Meja</label>
+                            <input type="number" class="form-control" id="meja" name="meja" placeholder="Nomor Meja">
+                        </div>
+                        <div class="form-group">
+                            <label for="updateSpecialRequest">Special Request</label>
+                            <textarea class="form-control" id="updateSpecialRequest" name="special_request" rows="3" placeholder="Special Request"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success mt-3">Update Pesanan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <script>
+        $(document).ready(function () {
+            // Mendapatkan daftar pesanan dari API
+            $.get('/pesanan', function (data) {
+                const tbody = $('#pesanan-list');
+            
+                data.forEach((pesanan, index) => {
+                    const items = [];
+                    const menu = [
+                        { key: 'nasi_goreng', label: 'Nasi Goreng' },
+                        { key: 'mie_goreng', label: 'Mie Goreng' },
+                        { key: 'nasi_ayam_goreng', label: 'Nasi Ayam Goreng' },
+                        { key: 'mie_kuah', label: 'Mie Kuah' },
+                        { key: 'magelangan', label: 'Magelangan' },
+                        { key: 'bubur_kacang_ijo', label: 'Bubur Kacang Ijo' },
+                        { key: 'es_teh', label: 'Es Teh' },
+                        { key: 'es_jeruk', label: 'Es Jeruk' },
+                        { key: 'es_milo', label: 'Es Milo' },
+                        { key: 'kopi', label: 'Kopi' },
+                        { key: 'pop_ice', label: 'Pop Ice' },
+                        { key: 'teh_hangat', label: 'Teh Hangat' }
+                    ];
+            
+                    menu.forEach(item => {
+                        if (pesanan[item.key] && pesanan[item.key] > 0) {
+                            items.push(`${item.label} (${pesanan[item.key]})`);
+                        }
+                    });
+            
+                    if (items.length > 0) {
+                        tbody.append(`
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${pesanan.nama_lengkap}</td>
+                                <td>${pesanan.jumlah_orang}</td>
+                                <td>${items.join(', ')}</td> 
+                                <td>${pesanan.special_request}</td>
+                                <td>${pesanan.nomor_meja}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm edit-btn" data-id="${pesanan.id_pesanan}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm delete-btn" data-id="${pesanan.id_pesanan}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                        `);
+                    }
+                });
+            
+                // Event listener untuk menghapus pesanan
+                $('.delete-btn').on('click', function () {
+                    const idPesanan = $(this).data('id');
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: "Anda akan menghapus pesanan ini.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Hapus'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: `/pesanan/${idPesanan}`,
+                                type: 'DELETE',
+                                success: function () {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Berhasil',
+                                        text: 'Pesanan berhasil dihapus.',
+                                    }).then(() => {
+                                        $('#pesanan-list').empty(); 
+                                        loadPesananList(); 
+                                    });
+                                },
+                                error: function () {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Gagal',
+                                        text: 'Terjadi kesalahan saat menghapus pesanan.',
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });                
+            });
+
+            // Tambah Pesanan
+            function createOptions(selectId, maxOptions) {
+                const selectElement = document.getElementById(selectId);
+                for (let i = 0; i <= maxOptions; i++) {
+                    const option = document.createElement("option");
+                    option.value = i;
+                    option.text = i;
+                    selectElement.appendChild(option);
+                }
+            }
+            
+            const foodAndDrinkItems = [
+                "Nasgor", "Mie", "Ayam", "Kuah", "Magelang", "Burjo",
+                "Teteh", "Ruk", "Lo", "PI", "POP", "TEH"
+            ];
+            
+            foodAndDrinkItems.forEach(item => createOptions(item, 20));
+            
+            document.querySelector("#bookingForm").addEventListener("submit", async function (event) {
+                event.preventDefault(); 
+            
+                // Mengambil nilai dari form
+                const data = {
+                    nama_lengkap: document.getElementById("name").value.trim(),
+                    jumlah_orang: parseInt(document.getElementById("people").value.trim()),
+                    nasi_goreng: parseInt(document.getElementById("Nasgor").value),
+                    mie_goreng: parseInt(document.getElementById("Mie").value),
+                    nasi_ayam_goreng: parseInt(document.getElementById("Ayam").value),
+                    mie_kuah: parseInt(document.getElementById("Kuah").value),
+                    magelangan: parseInt(document.getElementById("Magelang").value),
+                    bubur_kacang_ijo: parseInt(document.getElementById("Burjo").value),
+                    es_teh: parseInt(document.getElementById("Teteh").value),
+                    es_jeruk: parseInt(document.getElementById("Ruk").value),
+                    es_milo: parseInt(document.getElementById("Lo").value),
+                    kopi: parseInt(document.getElementById("PI").value),
+                    pop_ice: parseInt(document.getElementById("POP").value),
+                    teh_hangat: parseInt(document.getElementById("TEH").value),
+                    nomor_meja: parseInt(document.getElementById("meja").value.trim()),
+                    special_request: document.getElementById("special_request").value.trim(),
+                };
+            
+                if (!data.nama_lengkap || isNaN(data.jumlah_orang) || data.jumlah_orang <= 0 || isNaN(data.nomor_meja) || data.nomor_meja <= 0) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Nama lengkap dan jumlah orang wajib diisi dengan benar!",
+                    });
+                    return;
+                }
+            
+                try {
+                    const response = await fetch("/pesanan", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(data),
+                    });
+            
+                    if (!response.ok) {
+                        throw new Error("Terjadi kesalahan pada server!");
+                    }
+            
+                    Swal.fire({
+                        icon: "success",
+                        title: "Pemesanan Berhasil",
+                        text: "Terima kasih, pesanan Anda telah berhasil dibuat.",
+                    }).then(() => {
+                        document.querySelector("#bookingForm").reset();
+                        location.reload();
+                    });
+                } catch (error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: error.message,
+                    });
+                }
+            });            
+        });
+        $(document).ready(function () {
+            // Function to load and display orders
+            $.get('/pesanan', function (data) {
+                const tbody = $('#pesanan-list');
+                
+                data.forEach((pesanan, index) => {
+                    // Process the menu items
+                    const items = [];
+                    const menu = [
+                        { key: 'nasi_goreng', label: 'Nasi Goreng' },
+                        { key: 'mie_goreng', label: 'Mie Goreng' },
+                        { key: 'nasi_ayam_goreng', label: 'Nasi Ayam Goreng' },
+                        { key: 'mie_kuah', label: 'Mie Kuah' },
+                        { key: 'magelangan', label: 'Magelangan' },
+                        { key: 'bubur_kacang_ijo', label: 'Bubur Kacang Ijo' },
+                        { key: 'es_teh', label: 'Es Teh' },
+                        { key: 'es_jeruk', label: 'Es Jeruk' },
+                        { key: 'es_milo', label: 'Es Milo' },
+                        { key: 'kopi', label: 'Kopi' },
+                        { key: 'pop_ice', label: 'Pop Ice' },
+                        { key: 'teh_hangat', label: 'Teh Hangat' }
+                    ];
+        
+                    menu.forEach(item => {
+                        if (pesanan[item.key] && pesanan[item.key] > 0) {
+                            items.push(`${item.label} (${pesanan[item.key]})`);
+                        }
+                    });
+        
+                    if (items.length > 0) {
+                        tbody.append(`
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${pesanan.nama_lengkap}</td>
+                                <td>${pesanan.jumlah_orang}</td>
+                                <td>${items.join(', ')}</td>
+                                <td>${pesanan.nomor_meja}</td>
+                                <td>${pesanan.special_request}</td>
+                                  <td>
+                                    <button class="btn btn-primary btn-sm edit-btn" data-id="${pesanan.id_pesanan}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm delete-btn" data-id="${pesanan.id_pesanan}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    }
+                });
+        
+                // Handle form submission to update pesanan
+                $(document).ready(function () {
+                    // Fungsi untuk memuat daftar pesanan
+                    function loadPesananList() {
+                        $.get('/pesanan', function (data) {
+                            const tbody = $('#pesanan-list');
+                            tbody.empty(); 
+                
+                            data.forEach((pesanan, index) => {
+                                const items = [];
+                                const menu = [
+                                    { key: 'nasi_goreng', label: 'Nasi Goreng' },
+                                    { key: 'mie_goreng', label: 'Mie Goreng' },
+                                    { key: 'nasi_ayam_goreng', label: 'Nasi Ayam Goreng' },
+                                    { key: 'mie_kuah', label: 'Mie Kuah' },
+                                    { key: 'magelangan', label: 'Magelangan' },
+                                    { key: 'bubur_kacang_ijo', label: 'Bubur Kacang Ijo' },
+                                    { key: 'es_teh', label: 'Es Teh' },
+                                    { key: 'es_jeruk', label: 'Es Jeruk' },
+                                    { key: 'es_milo', label: 'Es Milo' },
+                                    { key: 'kopi', label: 'Kopi' },
+                                    { key: 'pop_ice', label: 'Pop Ice' },
+                                    { key: 'teh_hangat', label: 'Teh Hangat' }
+                                ];
+                
+                                menu.forEach(item => {
+                                    if (pesanan[item.key] && pesanan[item.key] > 0) {
+                                        items.push(`${item.label} (${pesanan[item.key]})`);
+                                    }
+                                });
+                
+                                if (items.length > 0) {
+                                    tbody.append(`
+                                        <tr>
+                                            <td>${index + 1}</td>
+                                            <td>${pesanan.nama_lengkap}</td>
+                                            <td>${pesanan.jumlah_orang}</td>
+                                            <td>${items.join(', ')}</td>
+                                            <td>${pesanan.nomor_meja}</td>
+                                            <td>${pesanan.special_request}</td>
+                                              <td>
+                                            <button class="btn btn-primary btn-sm edit-btn" data-id="${pesanan.id_pesanan}">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-sm delete-btn" data-id="${pesanan.id_pesanan}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                        </tr>
+                                    `);
+                                }
+                            });
+                
+                            // Event listener untuk tombol Edit
+                            $('.edit-btn').on('click', function () {
+                                const idPesanan = $(this).data('id');
+                                $.get(`/pesanan/${idPesanan}`, function (pesanan) {
+                                    $('#updatePesananId').val(pesanan.id_pesanan);
+                                    $('#updateName').val(pesanan.nama_lengkap);
+                                    $('#updatePeople').val(pesanan.jumlah_orang);
+                                    $('#updateNasgor').val(pesanan.nasi_goreng);
+                                    $('#updateMie').val(pesanan.mie_goreng);
+                                    $('#updateAyam').val(pesanan.nasi_ayam_goreng);
+                                    $('#updateKuah').val(pesanan.mie_kuah);
+                                    $('#updateMagelang').val(pesanan.magelangan);
+                                    $('#updateBurjo').val(pesanan.bubur_kacang_ijo);
+                                    $('#updateTeteh').val(pesanan.es_teh);
+                                    $('#updateRuk').val(pesanan.es_jeruk);
+                                    $('#updateLo').val(pesanan.es_milo);
+                                    $('#updatePI').val(pesanan.kopi);
+                                    $('#updatePOP').val(pesanan.pop_ice);
+                                    $('#updateTEH').val(pesanan.teh_hangat);
+                                    $('#updateNomorMeja').val(pesanan.nomor_meja);
+                                    $('#updateSpecialRequest').val(pesanan.special_request);
+
+                                    const selectIds = [
+                                        'updateNasgor', 'updateMie', 'updateAyam', 'updateKuah', 'updateMagelang', 
+                                        'updateBurjo', 'updateTeteh', 'updateRuk', 'updateLo', 'updatePI', 
+                                        'updatePOP', 'updateTEH'
+                                    ];
+                                    selectIds.forEach(selectId => createOptions(selectId, 20));
+
+                                    $('#updatePesananModal').modal('show');
+                                });
+                            });
+                
+                            // Event listener untuk menghapus pesanan
+                            $('.delete-btn').on('click', function () {
+                                const idPesanan = $(this).data('id');
+                                Swal.fire({
+                                    title: 'Apakah Anda yakin?',
+                                    text: "Anda akan menghapus pesanan ini.",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Hapus'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        $.ajax({
+                                            url: `/pesanan/${idPesanan}`,
+                                            type: 'DELETE',
+                                            success: function () {
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Berhasil',
+                                                    text: 'Pesanan berhasil dihapus.',
+                                                }).then(() => {
+                                                    loadPesananList(); 
+                                                });
+                                            },
+                                            error: function () {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Gagal',
+                                                    text: 'Terjadi kesalahan saat menghapus pesanan.',
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            });
+                        });
+                    }
+                
+                    loadPesananList();
+                });                
+            });
+        });    
+        
+        // Cari Pesanan berdasarkan nama dan nomor meja
+        $(document).ready(function () {
+            $('#searchPesanan').on('input', function () {
+                const searchValue = $(this).val().toLowerCase();
+        
+                $('#pesanan-list tr').each(function () {
+                    const nama = $(this).find('td:nth-child(2)').text().toLowerCase();
+                    const nomorMeja = $(this).find('td:nth-child(5)').text().toLowerCase();
+
+        
+                    if (nama.includes(searchValue) || nomorMeja.includes(searchValue)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+    </script>
+</div>

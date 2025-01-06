@@ -1,0 +1,288 @@
+<div class="user-page">
+    <div class="container mt-4">
+        <h1 class="mb-4">Data User</h1>
+        
+        <div class="d-flex justify-content-between mb-3">
+            <div class="input-group w-25">
+                <span class="input-group-text">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" id="searchUsers" class="form-control" placeholder="Cari Users...">
+            </div>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">Tambah User</button>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="users-list">
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal untuk tambah user -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserModalLabel">Tambah User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addUserForm">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" class="form-control" required>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" class="form-control" required>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="role">Role</label>
+                            <select id="role" class="form-control" required>
+                                <option value="admin">Admin</option>
+                                <option value="user">User</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success mt-3">Tambah User</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal untuk Update User -->
+    <div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateUserModalLabel">Update User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateUserForm">
+                        <input type="hidden" id="updateUserId">
+                        <div class="form-group">
+                            <label for="updateUsername">Username</label>
+                            <input type="text" id="updateUsername" class="form-control" required>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="updateEmail">Email</label>
+                            <input type="email" id="updateEmail" class="form-control" required>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="updatePassword">Password</label>
+                            <input type="password" id="updatePassword" class="form-control">
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="updateRole">Role</label>
+                            <select id="updateRole" class="form-control" required>
+                                <option value="admin">Admin</option>
+                                <option value="user">User</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success mt-3">Update User</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $.get('/users', function (data) {
+                const tbody = $('#users-list');
+                if (data.length > 0) {
+                    data.forEach((user, index) => {
+                        tbody.append(`
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${user.username}</td>
+                                <td>${user.email}</td>
+                                <td>${user.role}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm edit-btn" data-id="${user.id}" data-username="${user.username}" data-email="${user.email}" data-role="${user.role}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm delete-btn" data-id="${user.id}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                }
+            });
+    
+            $(document).on('click', '.delete-btn', function () {
+                const id = $(this).data('id');
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Anda akan menghapus user ini.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Hapus'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/users/${id}`,
+                            type: 'DELETE',
+                            success: function () {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: 'User berhasil dihapus.',
+                                }).then(() => {
+                                    location.reload(); 
+                                });
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: 'Terjadi kesalahan saat menghapus user.',
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+            
+
+            $('#addUserForm').on('submit', function (e) {
+                e.preventDefault();
+
+                const username = $('#username').val().trim();
+                const email = $('#email').val().trim();
+                const password = $('#password').val().trim();
+                const role = $('#role').val().trim();
+
+                if (username && email && password && role) {
+                    $.ajax({
+                        url: '/users',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ username, email, password, role }),
+                        success: function () {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'User Berhasil Ditambahkan!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function (error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal Menambahkan User!',
+                                text: error.responseText,
+                                showConfirmButton: true
+                            });
+                        }
+                    });
+                }else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Semua field harus diisi!',
+                        showConfirmButton: true
+                    });
+                }
+            });
+        });
+        // Tombol Edit User
+        $(document).on('click', '.edit-btn', function () {
+            const userId = $(this).data('id');
+            const username = $(this).data('username');
+            const email = $(this).data('email');
+            const role = $(this).data('role');
+
+            // Isi modal dengan data user
+            $('#updateUserId').val(userId);
+            $('#updateUsername').val(username);
+            $('#updateEmail').val(email);
+            $('#updateRole').val(role);
+
+            // Tampilkan modal
+            $('#updateUserModal').modal('show');
+        });
+
+        // Update Data User
+        $('#updateUserForm').on('submit', function (e) {
+            e.preventDefault();
+
+            const userId = $('#updateUserId').val();
+            const username = $('#updateUsername').val().trim();
+            const email = $('#updateEmail').val().trim();
+            const password = $('#updatePassword').val().trim(); // Kosongkan jika tidak ingin mengubah password
+            const role = $('#updateRole').val().trim();
+
+            // Validasi
+            if (username && email && role) {
+                $.ajax({
+                    url: `/users/${userId}`,
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ username, email, password, role }),
+                    success: function () {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'User Berhasil Diperbarui!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            location.reload(); // Reload halaman setelah update
+                        });
+                    },
+                    error: function (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal Memperbarui User!',
+                            text: error.responseText,
+                            showConfirmButton: true
+                        });
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Semua field harus diisi!',
+                    showConfirmButton: true
+                });
+            }
+        });
+
+        // Cari user berdasarkan username dan email
+        $(document).ready(function () {
+            $('#searchUsers').on('input', function () {
+                const searchValue = $(this).val().toLowerCase();
+        
+                $('#users-list tr').each(function () {
+                    const username = $(this).find('td:nth-child(2)').text().toLowerCase();
+                    const email = $(this).find('td:nth-child(3)').text().toLowerCase();
+
+        
+                    if (username.includes(searchValue) || email.includes(searchValue)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+    </script>
+</div>

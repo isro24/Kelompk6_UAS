@@ -1,0 +1,109 @@
+<style>
+    .custom-modal {
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        width: 200px;
+        background: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+        padding: 15px;
+        z-index: 1050; 
+        display: none; 
+    }
+
+    .custom-modal.active {
+        display: block; 
+    }
+
+    .custom-modal .btn-logout {
+        width: 100%;
+        background: #dc3545;
+        color: white;
+        border: none;
+    }
+
+    .custom-modal .btn-logout:hover {
+        background: #c82333;
+    }
+
+    #modalTrigger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px; 
+        transition: background-color 0.2s;
+    }
+
+    #modalTrigger i {
+        font-size: 36px; 
+        color: #000; 
+    }
+</style>
+
+<nav class="navbar navbar-light bg-white navbar-fixed" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="/images/Logo.png" alt="Logo" width="40" height="40">
+        </a>
+        <ul class="navbar-nav ms-auto d-flex align-items-center flex-row">
+            <li class="nav-item mx-2">
+                <span class="fw-bold" id="currentTime">00:00:00</span>
+            </li>
+            <li class="nav-item mx-2">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-bell fa-fw"></i>
+                </a>
+            </li>
+            <li class="nav-item mx-4">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-envelope fa-fw"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="modalTrigger">
+                    <i class="fas fa-user-cog fa-fw"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Custom Modal -->
+<div class="custom-modal" id="customModal">
+    <form action="/logout" method="POST">
+        <button class="btn w-100" type="submit" style="color: black;" onmouseover="this.style.color='#007BFF'" onmouseout="this.style.color='black'">
+            Sign Out
+            <i class="fas fa-sign-out-alt ms-2"></i>
+        </button>
+    </form>
+</div>
+
+
+<script>
+    function updateTime() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // Toggle modal visibility
+    const modalTrigger = document.getElementById('modalTrigger');
+    const customModal = document.getElementById('customModal');
+
+    modalTrigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        customModal.classList.toggle('active');
+    });
+
+    // Close modal if clicked outside
+    document.addEventListener('click', (e) => {
+        if (!customModal.contains(e.target) && e.target !== modalTrigger && !modalTrigger.contains(e.target)) {
+            customModal.classList.remove('active');
+        }
+    });
+</script>

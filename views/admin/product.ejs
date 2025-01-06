@@ -1,0 +1,368 @@
+<div class="product-page container mt-4">
+    <h1 class="mb-4">Data Produk</h1>
+    
+    <div class="d-flex justify-content-between mb-3">
+        <div class="input-group w-25">
+            <span class="input-group-text">
+                <i class="fas fa-search"></i>
+            </span>
+            <input type="text" id="searchUsers" class="form-control" placeholder="Cari Users...">
+        </div>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">Tambah Produk</button>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Gambar</th>
+                <th>Nama Produk</th>
+                <th>Deskripsi</th>
+                <th>Harga</th>
+                <th>Stok</th>
+                <th>Kategori</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="product-list">
+            <% product.forEach((p, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td>
+                        <% if (p.image) { %>
+                            <img src="<%= p.image %>" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover;">
+                        <% } else { %>
+                            Tidak ada gambar
+                        <% } %>
+                    </td>
+                    <td><%= p.nama_product %></td>
+                    <td><%= p.deskripsi %></td>
+                    <td>Rp<%= p.harga.toLocaleString() %></td>
+                    <td><%= p.stok %></td>
+                    <td><%= p.kategori %></td>
+                    <td>
+                        <button class="btn btn-primary btn-sm editBtn" data-id="<%= p.id %>" data-bs-toggle="modal" data-bs-target="#editProductModal">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm deleteBtn" data-id="<%= p.id %>">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+    <!-- Modal untuk Tambah Produk -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Tambah Produk</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProductForm">
+                        <div class="form-group">
+                            <label for="nama_product">Nama Produk</label>
+                            <input type="text" id="nama_product" class="form-control" required>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="deskripsi">Deskripsi</label>
+                            <textarea id="deskripsi" class="form-control" required></textarea>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="harga">Harga</label>
+                            <input type="number" id="harga" class="form-control" required>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="stok">Stok</label>
+                            <input type="number" id="stok" class="form-control" required>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="kategori">Kategori</label>
+                            <select id="kategori" class="form-control" required>
+                                <option value="Makanan">Makanan</option>
+                                <option value="Minuman">Minuman</option>
+                            </select>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="image">Gambar</label>
+                            <input type="file" id="image" class="form-control" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-success mt-3">Tambah Produk</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal untuk Edit Produk -->
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductModalLabel">Edit Produk</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editProductForm">
+                    <input type="hidden" id="editProductId">
+                    <div class="form-group">
+                        <label for="editNamaProduct">Nama Produk</label>
+                        <input type="text" id="editNamaProduct" class="form-control" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="editDeskripsi">Deskripsi</label>
+                        <textarea id="editDeskripsi" class="form-control" required></textarea>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="editHarga">Harga</label>
+                        <input type="number" id="editHarga" class="form-control" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="editStok">Stok</label>
+                        <input type="number" id="editStok" class="form-control" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="editKategori">Kategori</label>
+                        <select id="editKategori" class="form-control" required>
+                            <option value="Makanan">Makanan</option>
+                            <option value="Minuman">Minuman</option>
+                        </select>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="editImage">Gambar</label>
+                        <input type="file" id="editImage" class="form-control" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-success mt-3">Simpan Perubahan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Add new product with image
+            $('#addProductForm').on('submit', function (e) {
+                e.preventDefault();
+
+                const namaProduct = $('#nama_product').val().trim();
+                const deskripsi = $('#deskripsi').val().trim();
+                const harga = $('#harga').val();
+                const stok = $('#stok').val();
+                const kategori = $('#kategori').val();
+                const image = $('#image')[0].files[0];
+
+                const existingProducts = $('#product-list tr').map(function () {
+                    const row = $(this);
+                    return {
+                        nama: row.find('td:nth-child(3)').text().trim(),
+                        gambar: row.find('td:nth-child(2) img').attr('src') || ''
+                    };
+                }).get();
+
+                const isDuplicate = existingProducts.some(product => 
+                    product.nama === namaProduct || (image && product.gambar.includes(image.name))
+                );
+
+                if (isDuplicate) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Nama Produk atau Gambar Sudah Ada!',
+                        text: 'Silakan gunakan nama atau gambar lain.',
+                        showConfirmButton: true
+                    });
+                    return;
+                }
+
+                    const formData = new FormData();
+                    formData.append('nama_product', namaProduct);
+                    formData.append('deskripsi', deskripsi);
+                    formData.append('harga', harga);
+                    formData.append('stok', stok);
+                    formData.append('kategori', kategori);
+                    if (image) {
+                        formData.append('image', image);
+
+                    $.ajax({
+                        url: '/product', 
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function () {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Produk Berhasil Ditambahkan!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload(); 
+                            });
+                        },
+                        error: function (error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal Menambahkan Produk!',
+                                text: error.responseText,
+                                showConfirmButton: true
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Semua field harus diisi!',
+                        showConfirmButton: true
+                    });
+                }
+            });
+
+
+    
+            // Delete a product
+            $('.deleteBtn').on('click', function () {
+                const id = $(this).data('id'); 
+    
+                Swal.fire({
+                    title: 'Yakin ingin menghapus produk ini?',
+                    text: 'Produk yang dihapus tidak dapat dikembalikan!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        
+                        $.ajax({
+                            url: '/product/' + id, 
+                            type: 'DELETE',
+                            success: function () {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Produk Berhasil Dihapus!',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    location.reload(); 
+                                });
+                            },
+                            error: function (error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal Menghapus Produk!',
+                                    text: error.responseText,
+                                    showConfirmButton: true
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+    
+            // Show edit modal with the current product details
+            let editId;
+            $('.editBtn').on('click', function () {
+                const editId = $(this).data('id');
+
+                $.ajax({
+                    url: '/product/' + editId, 
+                    type: 'GET',
+                    success: function (product) {
+                        $('#editProductId').val(product.id);
+                        $('#editNamaProduct').val(product.nama_product);
+                        $('#editDeskripsi').val(product.deskripsi);
+                        $('#editHarga').val(product.harga);
+                        $('#editStok').val(product.stok);
+                        $('#editKategori').val(product.kategori);
+                    },
+                    error: function (error) {
+                        console.error("Error fetching product details:", error.responseText);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal Mendapatkan Data Produk!',
+                            text: error.responseText,
+                            showConfirmButton: true
+                        });
+                    }
+                });
+            });
+
+        // Update product on form submission
+            $('#editProductForm').on('submit', function (e) {
+                e.preventDefault();
+
+                const id = $('#editProductId').val();
+                const namaProduct = $('#editNamaProduct').val().trim();
+                const deskripsi = $('#editDeskripsi').val().trim();
+                const harga = $('#editHarga').val();
+                const stok = $('#editStok').val();
+                const kategori = $('#editKategori').val();
+                const image = $('#editImage')[0].files[0];
+
+                if (namaProduct && deskripsi && harga && stok && kategori) {
+                    const formData = new FormData();
+                    formData.append('nama_product', namaProduct);
+                    formData.append('deskripsi', deskripsi);
+                    formData.append('harga', harga);
+                    formData.append('stok', stok);
+                    formData.append('kategori', kategori);
+                    if (image) {
+                        formData.append('image', image);
+                    }
+
+                    $.ajax({
+                        url: '/product/' + id, 
+                        type: 'PUT',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function () {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Produk Berhasil Diperbarui!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload(); 
+                            });
+                        },
+                        error: function (error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal Memperbarui Produk!',
+                                text: error.responseText,
+                                showConfirmButton: true
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Semua field harus diisi!',
+                        showConfirmButton: true
+                    });
+                }
+            });
+        });
+
+        // Cari berdasarkan Nama Produk
+        $('#searchProduct').on('input', function () {
+            const searchValue = $(this).val().toLowerCase();
+    
+            $('#product-list tr').each(function () {
+                const productName = $(this).find('td:nth-child(3)').text().toLowerCase();
+    
+                if (productName.includes(searchValue)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    </script>        
+</div>
