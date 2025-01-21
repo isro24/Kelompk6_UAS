@@ -1,10 +1,10 @@
 Kelompok 6
 
 Anggota :
-Surya Guntur S. : 20220140002
-Dzar Zaki Fazluri : 20220140008
-Yogi Dewanto : 20220140023
-Rama Shandy : 20220130029
+Surya Guntur S. : 20220140002,
+Dzar Zaki Fazluri : 20220140008,
+Yogi Dewanto : 20220140023,
+Rama Shandy : 20220130029,
 Isro Usman : 20220140047
 
 Use Case: 
