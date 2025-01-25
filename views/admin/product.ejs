@@ -1,3 +1,19 @@
+<style>
+    #printButton {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000; 
+        border-radius: 50px;
+        padding: 10px 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #printButton:hover {
+        background-color: #0056b3; 
+    }
+</style>
+
 <div class="product-page container mt-4">
     <h1 class="mb-4">Data Produk</h1>
     
@@ -6,7 +22,7 @@
             <span class="input-group-text">
                 <i class="fas fa-search"></i>
             </span>
-            <input type="text" id="searchUsers" class="form-control" placeholder="Cari Users...">
+            <input type="text" id="searchProduct" class="form-control" placeholder="Cari Produk...">
         </div>
         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">Tambah Produk</button>
     </div>
@@ -52,6 +68,11 @@
             <% }); %>
         </tbody>
     </table>
+
+    <form action="/admin/products/print" method="POST">
+        <button id="printButton" class="btn btn-primary btn-lg"><i class="fas fa-print"></i> </button>    
+    </form>
+
 
     <!-- Modal untuk Tambah Produk -->
     <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
@@ -140,7 +161,6 @@
             </div>
         </div>
     </div>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -364,5 +384,10 @@
                 }
             });
         });
+
+        document.getElementById('printButton').addEventListener('click', function () {
+            window.location.href = '/admin/products/print';
+        });
+        
     </script>        
 </div>

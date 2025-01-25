@@ -106,4 +106,13 @@ router.delete('/:id', (req, res) => {
     });
 });
 
+router.get('/count', (req, res) => {
+    db.query('SELECT COUNT(*) AS total FROM product', (err, results) => {
+        if (err) {
+            return res.status(500).send('Internal Server Error');
+        }
+        res.json({ totalUsers: results[0].total });
+    });
+});
+
 module.exports = router;

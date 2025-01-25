@@ -2,53 +2,112 @@
     .card {
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         border: none;
+        margin-bottom: 20px;
     }
     .card:hover {
         transform: translateY(-3px);
         transition: 0.3s;
     }
-
+    .chart-container {
+        position: relative;
+        height: 300px;
+    }
 </style>
-<div class="dashboard">
-    <div class="container mt-4">
+<div class = "container mt-4">
+<!-- Dashboard Admin -->
+    <div class="dashboard">
         <h1>Dashboard Admin</h1>
-        <p class="welcome">Selamat datang, admin!</p>
-
         <div class="row">
-            <div class="col-md-4">
+            <!-- Users Card -->
+            <div class="col-md-3">
                 <div class="card text-center">
                     <div class="card-body">
                         <i class="fas fa-user fa-3x text-primary mb-3"></i>
-                        <h5 class="card-title">Users</h5>
-                        <p class="card-text">Kelola pengguna yang terdaftar.</p>
-                        <a href="/admin/users" class="btn btn-primary">Lihat Users</a>
+                        <h5 class="card-title">Jumlah Pengguna</h5>
+                        <p class="card-text"><%= totalUsers %></p>
                     </div>
                 </div>
             </div>
 
             <!-- Products Card -->
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card text-center">
                     <div class="card-body">
                         <i class="fas fa-box fa-3x text-success mb-3"></i>
-                        <h5 class="card-title">Produk</h5>
-                        <p class="card-text">Kelola produk yang tersedia.</p>
-                        <a href="/admin/product" class="btn btn-success">Lihat Produk</a>
+                        <h5 class="card-title">Jumlah Produk</h5>
+                        <p class="card-text"><%= totalProducts %></p>
                     </div>
                 </div>
             </div>
 
             <!-- Orders Card -->
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card text-center">
                     <div class="card-body">
-                        <i class="fas fa-store fa-3x text-warning mb-3"></i>
-                        <h5 class="card-title">Pesanan</h5>
-                        <p class="card-text">Kelola semua pesanan yang masuk.</p>
-                        <a href="/admin/pesanan" class="btn btn-warning">Lihat Pesanan</a>
+                        <i class="fas fa-shopping-cart fa-3x text-warning mb-3"></i>
+                        <h5 class="card-title">Jumlah Pesanan Online</h5>
+                        <p class="card-text"><%= totalOrders %></p>
+                    </div>
+                </div>
+            </div>
+            <!-- Pendapatan Card -->
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-dollar-sign fa-3x text-danger mb-3"></i>
+                        <h5 class="card-title">Total Pendapatan</h5>
+                        <p class="card-text" id="total-revenue">Rp<%= totalRevenue.toLocaleString() %></p>
+                    </div>
+                </div>
+            </div>
+            <!-- Grafik Stok Produk yang Hampir Habis -->
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Produk dengan Stok Hampir Habis</h5>
+                            <div class="chart-container">
+                                <canvas id="low-stock-chart"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Ambil data produk dengan stok rendah dari server
+        const lowStockProducts = <%- JSON.stringify(lowStockProducts) %>;
+
+        // Siapkan data untuk grafik
+        const productNames = lowStockProducts.map(product => product.name);
+        const productStocks = lowStockProducts.map(product => product.stock);
+
+        // Render grafik
+        const ctx = document.getElementById('low-stock-chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: productNames,
+                datasets: [{
+                    label: 'Stok Produk',
+                    data: productStocks,
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    });
+</script>

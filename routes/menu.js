@@ -16,6 +16,7 @@ router.get('/', (req, res) => {
             }
 
             res.render('menu', {
+                title: 'Menu',
                 makanan,
                 minuman,
                 layout: 'layouts/main-layout',

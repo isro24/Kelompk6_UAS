@@ -2,26 +2,248 @@
     <div class="container mt-4">
         <h1 class="mb-4">Pesanan Online</h1>
 
-        <!-- Tombol Edit Status -->
-        <div class="d-flex justify-content-end mb-3">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editStatusModal">Edit Status</button>
+        <div class="d-flex justify-content-between mb-3">
+            <div class="input-group w-25">
+                <span class="input-group-text">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" id="searchPesananOnline" class="form-control" placeholder="Cari Pesanan...">
+            </div>
         </div>
 
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>User Id</th>
                     <th>Jumlah</th>
                     <th>Total Pembayaran</th>
                     <th>Metode Pembayaran</th>
+                    <th>Alamat</th>
                     <th>Status</th>
+                    <th>Detail Pesanan</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody id="pesananOnline-list">
-                <!-- Data akan dimuat secara dinamis -->
+                <% pesananOnline.forEach((p, index) => { %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <td><%= p.stok %></td>
+                        <td>Rp<%= p.total_pembayaran.toLocaleString() %></td>
+                        <td><%= p.metode_pembayaran %></td>
+                        <td><%= p.alamat %></td>
+                        <td><%= p.status %></td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <button class="btn btn-primary btn-circle btn-sm viewDetailsBtn" data-id="<%= p.id %>">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>        
+                        <td>
+                            <button class="btn btn-primary btn-sm editStatusBtn" data-id="<%= p.id %>" data-bs-toggle="modal" data-bs-target="#editStatusModal">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm deleteBtn" data-id="<%= p.id %>">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                <% }); %>
             </tbody>
-        </table>
+        </table>        
     </div>
 </div>
+
+<!-- Modal Edit Status -->
+<div class="modal fade" id="editStatusModal" tabindex="-1" aria-labelledby="editStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editStatusModalLabel">Edit Status Pesanan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="statusSelect" class="form-label">Pilih Status</label>
+                    <select class="form-select" id="statusSelect">
+                        <option value="Tertunda">Tertunda</option>
+                        <option value="Selesai">Selesai</option>
+                        <option value="Dibatalkan">Dibatalkan</option>
+                        <option value="Dikirim">Dikirim</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="saveStatusBtn">Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Detail Pesanan -->
+<div class="modal fade" id="detailPesananModal" tabindex="-1" aria-labelledby="detailPesananModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailPesananModalLabel">Detail Pesanan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nama Produk</th>
+                            <th>Harga</th>
+                            <th>Jumlah</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detailPesananTable"></tbody>
+                </table>
+                <h5 class="text-end mt-3">Total: <span id="detailPesananTotal"></span></h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $('.viewDetailsBtn').on('click', function () {
+        const pesananId = $(this).data('id');
+    
+        $.ajax({
+            url: '/pesananOnline/' + pesananId + '/details',
+            type: 'GET',
+            success: function (data) {
+                let total = 0;  
+                $('#detailPesananTable').empty();
+    
+                data.forEach(item => {
+                    // Hitung subtotal berdasarkan harga * kuantitas
+                    const subtotal = item.harga * item.kuantitas; 
+                    total += subtotal;  
+    
+                    $('#detailPesananTable').append(`
+                        <tr>
+                            <td>${item.nama_product}</td>
+                            <td>Rp${item.harga.toLocaleString()}</td>
+                            <td>${item.kuantitas}</td>
+                            <td>Rp${subtotal.toLocaleString()}</td>
+                        </tr>
+                    `);
+                });
+    
+                $('#detailPesananTotal').text('Rp' + total.toLocaleString()); 
+                $('#detailPesananModal').modal('show');
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Memuat Detail Pesanan!',
+                    showConfirmButton: true
+                });
+            }
+        });
+    });        
+
+    let currentPesananId = null;
+
+    // Menangani klik pada tombol edit status
+    $('.editStatusBtn').on('click', function () {
+        currentPesananId = $(this).data('id');
+        const currentStatus = $(this).closest('tr').find('td:nth-child(6)').text().trim();
+        $('#statusSelect').val(currentStatus);  
+    });
+
+    // Menyimpan status yang sudah diubah
+    $('#saveStatusBtn').on('click', function () {
+        const newStatus = $('#statusSelect').val();
+
+        $.ajax({
+            url: '/pesananOnline/' + currentPesananId,
+            type: 'PUT',
+            data: { status: newStatus },
+            success: function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Status Pesanan Berhasil Diperbarui!',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    location.reload();  
+                });
+            },
+            error: function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Mengubah Status Pesanan!',
+                    text: error.responseText,
+                    showConfirmButton: true
+                });
+            }
+        });
+    });
+
+
+    $('.deleteBtn').on('click', function () {
+        const id = $(this).data('id'); 
+    
+        // Log ID untuk memverifikasi
+        console.log('Deleting ID:', id);
+    
+        Swal.fire({
+            title: 'Yakin ingin menghapus pesanan ini?',
+            text: 'Pesanan yang dihapus tidak dapat dikembalikan!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/pesananOnline/' + id, 
+                    type: 'DELETE',
+                    success: function () {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Pesanan Berhasil Dihapus!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            location.reload(); 
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error:', error); 
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal Menghapus Pesanan!',
+                            text: error.responseText,
+                            showConfirmButton: true
+                        });
+                    }
+                });
+            }
+        });
+    });    
+
+    $(document).ready(function () {
+        $('#searchPesananOnline').on('input', function () {
+            const searchValue = $(this).val().toLowerCase();
+    
+            $('#pesananOnline-list tr').each(function () {
+                const alamat = $(this).find('td:nth-child(6)').text().toLowerCase();
+    
+                if (alamat.includes(searchValue)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+</script>

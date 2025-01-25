@@ -1,5 +1,49 @@
+<style>
+    .qty-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+      }
+      
+      .qty-badge {
+        font-size: 1rem;
+        font-weight: bold;
+        min-width: 20px;
+        text-align: center;
+      }      
+      .qty-controls button {
+        transition: background-color 0.3s ease;
+    }
+
+    .kurang-btn {
+        background-color: #ffffff; 
+        border-radius: 50%;
+    }
+
+    .kurang-btn:hover {
+        background-color: #dc3545; 
+        color: white;
+    }
+
+    .tambah-btn-increment {
+      border-radius: 50%;
+        background-color: #ffffff;
+    }
+
+    .tambah-btn-increment:hover {
+        background-color: #28a745; 
+        color: white;
+    }
+</style>
 <div class="menu-page">
     <div class="container my-5">
+        <div class="checkout-icon-container text-right">
+            <a href="/cart" class="btn btn-primary">
+              <i class="fas fa-shopping-cart"></i> 
+              <span id="cart-count" class="badge">0</span>
+            </a>
+        </div>                   
         <h2 class="text-center mb-4">Menu Makanan</h2>
         <div class="row">
             <% makanan.forEach(product => { %>
@@ -14,11 +58,26 @@
                             <h5 class="card-title text-dark"><%= product.nama_product %></h5>
                             <p class="card-text mb-1 text-danger font-weight-bold">Rp<%= product.harga.toLocaleString() %></p>
                             <!-- Tombol untuk menambahkan produk -->
-                            <div class="quantity-controller mt-3">
-                                <button class="btn btn-outline-danger btn-sm d-none kurang-btn" data-id="<%= product.id %>">-</button>
-                                <span class="mx-2 jumlah-produk d-none" data-id="<%= product.id %>">1</span>
-                                <button class="btn btn-outline-success btn-sm tambah-btn" data-id="<%= product.id %>">Tambah</button>
-                            </div>
+                            <div class="product-actions">
+                                <button 
+                                  type="button" 
+                                  class="btn btn-outline-success btn-sm tambah-btn" style="border-radius: 20px;" 
+                                  data-id="<%= product.id %>" 
+                                  data-nama="<%= product.nama_product %>" 
+                                  data-harga="<%= product.harga %>" 
+                                  data-stok="<%= product.stok %>">
+                                  Tambah ke Keranjang
+                                </button>
+                                <div class="qty-controls d-none" data-id="<%= product.id %>">
+                                  <button class="btn btn-sm btn-outline-secondary kurang-btn" data-id="<%= product.id %>">
+                                    <i class="fas fa-minus"></i>
+                                  </button>
+                                  <span class="qty-badge" id="qty-<%= product.id %>">0</span>
+                                  <button class="btn btn-sm btn-outline-secondary tambah-btn-increment" data-id="<%= product.id %>">
+                                    <i class="fas fa-plus "></i>
+                                  </button>
+                                </div>
+                              </div>                              
                         </div>
                     </div>
                 </div>
@@ -41,11 +100,26 @@
                             <h5 class="card-title text-dark"><%= product.nama_product %></h5>
                             <p class="card-text mb-1 text-danger font-weight-bold">Rp<%= product.harga.toLocaleString() %></p>
                             <!-- Tombol untuk menambahkan produk -->
-                            <div class="quantity-controller mt-3">
-                                <button class="btn btn-outline-danger btn-sm d-none kurang-btn" data-id="<%= product.id %>">-</button>
-                                <span class="mx-2 jumlah-produk d-none" data-id="<%= product.id %>">1</span>
-                                <button class="btn btn-outline-success btn-sm tambah-btn" data-id="<%= product.id %>">Tambah</button>
-                            </div>
+                            <div class="product-actions">
+                                <button 
+                                  type="button" 
+                                  class="btn btn-outline-success btn-sm tambah-btn" 
+                                  data-id="<%= product.id %>" 
+                                  data-nama="<%= product.nama_product %>" 
+                                  data-harga="<%= product.harga %>" 
+                                  data-stok="<%= product.stok %>">
+                                  Tambah ke Keranjang
+                                </button>
+                                <div class="qty-controls d-none" data-id="<%= product.id %>">
+                                    <button class="btn btn-sm btn-outline-secondary kurang-btn" data-id="<%= product.id %>">
+                                      <i class="fas fa-minus"></i>
+                                    </button>
+                                    <span class="qty-badge" id="qty-<%= product.id %>">0</span>
+                                    <button class="btn btn-sm btn-outline-secondary tambah-btn-increment" data-id="<%= product.id %>">
+                                      <i class="fas fa-plus"></i>
+                                </button>
+                                </div>
+                              </div>                              
                         </div>
                     </div>
                 </div>
@@ -53,3 +127,124 @@
         </div>
     </div>
 </div>
+
+<script>
+    let cartCount = 0;
+  
+    // Update cart count UI
+    const updateCartCount = (count) => {
+      cartCount = count;
+      const cartCountElement = document.getElementById('cart-count');
+      cartCountElement.textContent = count;
+    };
+  
+    document.querySelectorAll('.tambah-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        const id = this.getAttribute('data-id');
+        const nama_product = this.getAttribute('data-nama');
+        const harga = this.getAttribute('data-harga');
+        const stok = this.getAttribute('data-stok');
+        const qtyBadge = document.getElementById(`qty-${id}`);
+        const qtyControls = this.nextElementSibling;
+  
+        // AJAX call to add product to cart
+        fetch('/pesananOnline/add-to-cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ id, nama_product, harga, stok })
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Update cart count and UI
+          cartCount++;
+          updateCartCount(cartCount);
+          qtyBadge.textContent = parseInt(qtyBadge.textContent) + 1;
+          this.classList.add('d-none');
+          qtyControls.classList.remove('d-none');
+        });
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('/pesananOnline/cart-data')
+          .then(response => response.json())
+          .then(data => {
+              const { cart, totalItems } = data;
+  
+              // Update cart count
+              updateCartCount(totalItems);
+  
+              // Perbarui UI untuk setiap item di keranjang
+              cart.forEach(item => {
+                  const qtyBadge = document.getElementById(`qty-${item.id}`);
+                  const tambahBtn = document.querySelector(`.tambah-btn[data-id="${item.id}"]`);
+                  const qtyControls = document.querySelector(`.qty-controls[data-id="${item.id}"]`);
+  
+                  if (qtyBadge && qtyControls) {
+                      qtyBadge.textContent = item.qty;
+                      tambahBtn.classList.add('d-none');
+                      qtyControls.classList.remove('d-none');
+                  }
+              });
+          });
+      });
+  
+    document.querySelectorAll('.kurang-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        const id = this.getAttribute('data-id');
+        const qtyBadge = document.getElementById(`qty-${id}`);
+        const tambahBtn = document.querySelector(`.tambah-btn[data-id="${id}"]`);
+        const qtyControls = this.parentElement;
+  
+        // AJAX call to reduce product quantity
+        fetch('/pesananOnline/remove-from-cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ id })
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Update UI
+          const currentQty = parseInt(qtyBadge.textContent);
+          if (currentQty > 1) {
+            qtyBadge.textContent = currentQty - 1;
+            cartCount--;
+          } else {
+            cartCount--;
+            updateCartCount(cartCount);
+            qtyBadge.textContent = 0;
+            qtyControls.classList.add('d-none');
+            tambahBtn.classList.remove('d-none');
+          }
+        });
+      });
+    });
+  
+    document.querySelectorAll('.tambah-btn-increment').forEach(button => {
+      button.addEventListener('click', function () {
+        const id = this.getAttribute('data-id');
+        const qtyBadge = document.getElementById(`qty-${id}`);
+  
+        // AJAX call to increase product quantity
+        fetch('/pesananOnline/add-to-cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ id })
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Update UI
+          qtyBadge.textContent = parseInt(qtyBadge.textContent) + 1;
+          cartCount++;
+          updateCartCount(cartCount);
+        });
+      });
+    });
+  </script>
+  

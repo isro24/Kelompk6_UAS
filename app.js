@@ -106,9 +106,8 @@ app.get('/checkout', isUser, (req, res) => {
     });
 });
 
-  
 
-app.listen(port, () => {
+app.listen(port,() => {
     console.log(`Server running at http://localhost:${port}/`);
 });
 
