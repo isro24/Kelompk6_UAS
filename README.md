@@ -13,6 +13,9 @@ https://github.com/isro24/Kelompk6_UAS/tree/main/test
 Database :
 https://drive.google.com/file/d/1rtY_OE4ODzRgJTaovnOpe3ncGAcCHgL2/view?usp=sharing
 
+Laporan :
+https://drive.google.com/file/d/1pNI3nmzpp0IOFiq7wKYvpZUIyLuG4ok_/view?usp=sharing
+
 Use Case: 
 ![Use Case Warmindo](https://github.com/user-attachments/assets/7aea873f-dbdc-4387-9152-05e936f7a113)
 
