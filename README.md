@@ -7,8 +7,11 @@ Yogi Dewanto : 20220140023,
 Rama Shandy : 20220130029,
 Isro Usman : 20220140047
 
-UnitTesting
+UnitTesting : 
 https://github.com/isro24/Kelompk6_UAS/tree/main/test
+
+Database :
+https://drive.google.com/file/d/1rtY_OE4ODzRgJTaovnOpe3ncGAcCHgL2/view?usp=sharing
 
 Use Case: 
 ![Use Case Warmindo](https://github.com/user-attachments/assets/7aea873f-dbdc-4387-9152-05e936f7a113)
